@@ -83,6 +83,12 @@ max(na.omit(num_only_temp))
 
 Transform dataframe to use only one id variable
 
+method:
+
+1. create an new dataframe (id_clean) to push data to as we clean up the id dataframe
+2. create id variable using the max value obtained from the previous code block
+3. clean up admission_type, discharge_disposition, admission_source variables and pad the empty cells with NA
+
 ```{r}
 # create new dataframe to push cleaned data to
 id_clean <- data.frame(id = 1:30)
@@ -109,4 +115,9 @@ id_clean$admission_source <- admission_source
 id_clean
 ```
 
+All of the variables are categorical variables excluding the id which is sequential and is used to reference values from df dataframe
+
+Some values are missing and some use different terms like: Not Available, NA, NULL, Not Mapped, Unknown/Invalid
+
+#### Next let's take a look at the diabetes(df) dataframe
 
