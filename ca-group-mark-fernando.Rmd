@@ -173,7 +173,7 @@ First, let's omit columns weight, medical_specialty, payer_code as they have too
 
 ```{r}
 df[ ,c('weight', 'medical_specialty', 'payer_code')] <- list(NULL)
-ncol(df)
+head(df)
 ```
 
 Next we are going to remove rows with ? values
@@ -195,5 +195,21 @@ Now that we omitted all the ? values we can take a sample of 10,000 values to pr
 ```{r}
 df_clean <- sample_n(df, 10000)
 nrow(df_clean)
+```
+
+---
+
+#### b) Calculate the statistical parameters (mean, median, minimum, maximum, and standard deviation) for each of the numerical variables
+
+```{r}
+df_numerical <- df_clean[, c('time_in_hospital', 'num_lab_procedures', 'num_procedures',  'num_medications', 'number_outpatient', 'number_emergency',  'number_inpatient')] 
+# summary(df_numerical)
+
+for(i in 1:ncol(df_numerical)){
+  print(names(df_numerical[i]))
+  print(summary(df_numerical[, i]))
+  print('Standard Deviation')
+  print(sd(df_numerical[, i]))
+} 
 ```
 
