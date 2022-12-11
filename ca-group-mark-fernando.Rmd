@@ -204,7 +204,6 @@ nrow(df_clean)
 
 ```{r}
 df_numerical <- df_clean[, c('time_in_hospital', 'num_lab_procedures', 'num_procedures',  'num_medications', 'number_outpatient', 'number_emergency',  'number_inpatient')] 
-# summary(df_numerical)
 
 for(i in 1:ncol(df_numerical)){
   print(names(df_numerical[i]))
