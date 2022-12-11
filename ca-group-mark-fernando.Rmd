@@ -15,26 +15,6 @@ Beata Strack, Jonathan P. DeShazo, Chris Gennings, Juan L. Olmo, Sebastian Ventu
 
 ---
 
-#### Import Datasets
-
-```{r}
-df <- read.csv('diabetic_data.csv')
-id <- read.csv('IDs_mapping.csv')
-```
-
-Let's take a look on what is inside the datasets
-
-```{r}
-str(df)
-str(id)
-```
-
-```{r}
-head(df)
-head(id)
-```
-
-
 #### Data Set Information:
 
 The dataset represents 10 years (1999-2008) of clinical care at 130 US hospitals and integrated delivery networks. It includes over 50 features representing patient and hospital outcomes. Information was extracted from the database for encounters that satisfied the following criteria.
@@ -53,8 +33,34 @@ Detailed description of all the atrributes is provided in Table 1 Beata Strack, 
 
 https://www.hindawi.com/journals/bmri/2014/781670/
 
+#### Import Datasets
+
+```{r}
+df <- read.csv('diabetic_data.csv')
+id <- read.csv('IDs_mapping.csv')
+```
+
+Let's take a look on what is inside the datasets
+
+```{r}
+str(df)
+```
+
+The diabetes dataframe (df) contains 101766 observations of  50 variables
+
+```{r}
+str(id)
+```
+
+The id dataframe contains 67 observations of 2 variables
+
+```{r}
+head(df)
+head(id)
+```
+
 ---
-## Assessment
+## Assessment Tasks
 
 #### a) Identify which variables are categorical, discrete and continuous in the chosen data set and show using some visualization or plot. Explore whether there are missing values for any of the variables.
 
