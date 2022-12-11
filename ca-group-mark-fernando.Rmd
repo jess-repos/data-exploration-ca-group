@@ -121,3 +121,45 @@ Some values are missing and some use different terms like: Not Available, NA, NU
 
 #### Next let's take a look at the diabetes(df) dataframe
 
+```{r}
+df
+```
+
+It seems that the diabetes(df) dataframe uses ? as NA but we will check NA values anyway just to make sure
+
+```{r}
+na_count <- sapply(df, function(y) sum(length(which(is.na(y)))))
+na_count
+```
+
+There is no NA values in the dataframe as expected
+
+```{r}
+na_count_question <- sapply(df, function(y) sum(length(which(y == '?'))))
+na_count_question
+```
+
+As we can see, columns weight, medical_specialty and payer_code has a lot of missing values so it is safe to omit those columns as they wouldn't helpful for the analysis
+
+```{r}
+df
+```
+
+identifiers: encounter_id, patient_nbr
+
+categorical: race, gender, admission_type_id, discharge_position_id, admission_source_id, medical specialty, max_glu_serum, A1Cresult, metformin, repaglinide, nateglinide, chlorpropamide, glimepiride, acetohexamide, glipizide, glyburide, tolbutamide, pioglitazone, rosiglitazone, acarbose, miglitol, troglitazone, tolazamide, examide, citoglipton, insulin, glyburide.metformin, glipizide.metformin, glimepiride.pioglitazone, metformin.rosiglitazone, metformin.pioglitazone, change, diabetesMed, readmitted
+
+admission_type_id, discharge_position_id, admission_source_id references values to id dataframe so it is treated as a categorical data
+
+discrete: age, time_in_hospital, num_lab_procedures, num_procedures, num_medications, number_outpatient, ,number_emergency,number_inpatient, diag_1, diag_2, diag_3, number_diagnoses
+
+age in medical data is treated as discrete data
+
+continuous: 
+
+unfortunately, we didn't find any variable that has continuous data
+
+```{r}
+
+```
+
