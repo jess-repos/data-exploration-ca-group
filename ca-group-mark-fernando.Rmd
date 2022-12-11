@@ -7,11 +7,11 @@ Students:\
 Fernando\
 Mark
 
+Dataset Source: https://archive.ics.uci.edu/ml/datasets/Diabetes+130-US+hospitals+for+years+1999-2008#
+
 #### Citations:
 
 Beata Strack, Jonathan P. DeShazo, Chris Gennings, Juan L. Olmo, Sebastian Ventura, Krzysztof J. Cios, and John N. Clore, “Impact of HbA1c Measurement on Hospital Readmission Rates: Analysis of 70,000 Clinical Database Patient Records,” BioMed Research International, vol. 2014, Article ID 781670, 11 pages, 2014.
-
-Source: https://archive.ics.uci.edu/ml/datasets/Diabetes+130-US+hospitals+for+years+1999-2008#
 
 ---
 
@@ -57,4 +57,50 @@ https://www.hindawi.com/journals/bmri/2014/781670/
 ## Assessment
 
 #### a) Identify which variables are categorical, discrete and continuous in the chosen data set and show using some visualization or plot. Explore whether there are missing values for any of the variables.
+
+First let's take a closer look at the id dataframe
+
+```{r}
+id
+```
+
+As we can see, the ID variables are interchanged to all other ids and we can possibly use only one id variable and change the description variable to their appropriate type
+
+#### Clean up id dataframe
+
+First let's find out what is the maximum number(id) from the id dataframe
+
+```{r}
+num_only_temp <- as.numeric(id$admission_type_id)
+max(na.omit(num_only_temp))
+```
+
+Transform dataframe to use only one id variable
+
+```{r}
+# create new dataframe to push cleaned data to
+id_clean <- data.frame(id = 1:30)
+
+# admission_type variable
+admission_type <- rep(NA, each = 30)
+admission_type[1:8] <- id[1:8, 2]
+id_clean$admission_type <- admission_type
+
+# discharge_disposition variable
+discharge_disposition <- rep(NA, each = 30)
+discharge_disposition[1:26] <- id[11:36, 2]
+discharge_disposition[27:29] <- id[38:40, 2]
+discharge_disposition[30] <- id[37, 2]
+id_clean$discharge_disposition <- discharge_disposition
+
+admission_source <- rep(NA, each = 30)
+admission_source[1:15] <- id[43:57, 2]
+admission_source[17:26] <- id[58:67, 2]
+id_clean$admission_source <- admission_source
+```
+
+```{r}
+id_clean
+```
+
 
