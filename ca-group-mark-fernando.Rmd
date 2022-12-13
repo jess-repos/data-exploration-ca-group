@@ -25,6 +25,8 @@ rm(list = ls())
 
 ```{r}
 library(dplyr)
+library(ggplot2)
+library(reshape)
 ```
 
 
@@ -84,7 +86,7 @@ First let's take a closer look at the id dataframe
 id
 ```
 
-As we can see, the ID variables are interchanged to all other ids and we can possibly use only one id variable and change the description variable to their appropriate type
+As we can see, the ID variables are interchanged to all other ids so we will separate them to each of their own dataframes
 
 #### Clean up id dataframe
 
@@ -160,7 +162,7 @@ admission_type_id, discharge_position_id, admission_source_id references values 
 
 discrete: age, time_in_hospital, num_lab_procedures, num_procedures, num_medications, number_outpatient, ,number_emergency,number_inpatient, diag_1, diag_2, diag_3, number_diagnoses
 
-age in medical data is treated as discrete data
+age in medical data is treated as discrete data but the way the values are represented suggests that it can be treated as categorical data
 
 continuous: 
 
@@ -198,11 +200,19 @@ df_clean <- sample_n(df, 10000)
 nrow(df_clean)
 ```
 
+Plotting categorical variables (number of cases between male and female genders categorized by their race and age.)
+
+```{r, fig.height = 6, fig.width = 12, fig.align = "center"}
+ggplot(data = df_clean) +
+  geom_bar(aes(x = race, fill = age)) +
+  facet_wrap(~gender)
+```
+
 ---
 
 #### b) Calculate the statistical parameters (mean, median, minimum, maximum, and standard deviation) for each of the numerical variables
 
-```{r}
+```{r, fig.width = 12, fig.align = "center"}
 df_numerical <- df_clean[, c('time_in_hospital', 'num_lab_procedures', 'num_procedures',  'num_medications', 'number_outpatient', 'number_emergency',  'number_inpatient')] 
 
 for(i in 1:ncol(df_numerical)){
@@ -210,6 +220,12 @@ for(i in 1:ncol(df_numerical)){
   print(summary(df_numerical[, i]))
   print('Standard Deviation')
   print(sd(df_numerical[, i]))
+  print('-------------------------------------')
 } 
+
+df_numerical_melted <- melt(df_numerical)
+ggplot(df_numerical_melted, aes(factor(variable), value, color = factor(variable))) +
+  geom_boxplot() + 
+  labs(x = 'Variable', y = 'Values')
 ```
 
