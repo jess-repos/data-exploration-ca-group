@@ -10,8 +10,8 @@ output: html_notebook
 **Lecturer:**\
 Dr. Muhammad Iqbal
 
-**Task a - d:** Mark Christian Bautista Albinto\
-**Task e - h:** Jose Fernando Gonzalez Anavia
+**Tasks a - d:** Mark Christian Bautista Albinto\
+**Tasks e - h:** Jose Fernando Gonzalez Anavia
 
 #### Citations:
 
@@ -134,7 +134,7 @@ All of the variables are categorical variables excluding the id which is sequent
 
 Some values are missing and some use different terms like: Not Available, NA, NULL, Not Mapped, Unknown/Invalid
 
-#### Next let's take a look at the diabetes(df) dataframe
+**Next let's take a look at the diabetes(df) dataframe**
 
 ```{r}
 df
@@ -215,7 +215,8 @@ nrow(df_clean)
 ggplot(data = df_clean) +
   geom_bar(aes(x = race, fill = age)) +
   facet_wrap(~gender) +
-  ggtitle('Number of Cases by Race between Male and Felame Patients')
+  ggtitle('Number of Cases by Race between Male and Felame Patients') +
+  theme_classic()
 ```
 
 ---
@@ -245,11 +246,12 @@ for(i in 1:ncol(df_numerical)){
 
 Creating multiple boxplots using different variables can be quite difficult and messy with the code so we will first melt the data to get only 2 columns using their column as a name and their row as a value.
 
-```{r}
+```{r, fig.height = 6, fig.width = 12, fig.align = "center"}
 df_numerical_melted <- melt(df_numerical)
 ggplot(df_numerical_melted, aes(factor(variable), value, color = variable)) +
   geom_boxplot() + 
-  labs(x = 'Variable', y = 'Values')
+  labs(x = 'Variable', y = 'Values') +
+  theme_classic()
 ```
 
 
@@ -257,7 +259,7 @@ ggplot(df_numerical_melted, aes(factor(variable), value, color = variable)) +
 
 #### c) Apply Min-Max Normalization, Z-score Standardization and Robust scalar on the numerical data variables.
 
-Applying Min-Max Normalization using formula x* = (x - min(x) / (max(x) - min(x)))
+**Applying Min-Max Normalization using formula x* = (x - min(x) / (max(x) - min(x)))**
 
 **First let us create the function to normalize the data**
 
@@ -269,10 +271,11 @@ mm_norm <- function(x){
 
 **Next let us take a look at the initial values before normalization (we are going to use num_procedures and num_medications variables)**
 
-```{r}
+```{r, fig.height = 6, fig.width = 12, fig.align = "center"}
 ggplot(df_numerical, aes(x = num_procedures, y = num_medications)) + 
   geom_point(colour = 'orange') + 
-  ggtitle('Number of Procedures vs Number of Medications')
+  ggtitle('Number of Procedures vs Number of Medications') +
+  theme_classic()
 ```
 
 The initial range of the plot is from 0 - 80
@@ -299,18 +302,124 @@ df_numerical$number_diagnoses_minmax <- mm_norm(df_numerical$number_diagnoses)
 
 **Plot demonstration of normalized variables**
 
-```{r}
+```{r, fig.height = 6, fig.width = 12, fig.align = "center"}
 ggplot(df_numerical, aes(x = num_procedures_minmax, y = num_medications_minmax)) + 
   geom_point(colour = 'orange') + 
-  ggtitle('Number or Procedures vs Number of Medications (Normalized by Min-Max)')
+  ggtitle('Number or Procedures vs Number of Medications (Normalized by Min-Max)') +
+  theme_classic()
 ```
 
-Min-Max Normalization Successful
+Min-Max Normalization Successful!
 
 As we can see from the plot, there is only a low positive correlation between the variables. Meaning, as the number of procedures rise, the number of medications rise as well but only by a small margin.
 
+**Applying Z-Score Standardization to all numerical variables using formula x* = ((x - mean(x)) / (sd(x)))**
+
+```{r}
+names(df_numerical)
+```
+
 **Applying Z-Score Standardization to all numerical variables**
+
+```{r}
+df_numerical$time_in_hospital_zscore <- scale(df_numerical$time_in_hospital)
+df_numerical$num_lab_procedures_zscore <- scale(df_numerical$num_lab_procedures)
+df_numerical$num_procedures_zscore <- scale(df_numerical$num_procedures)
+df_numerical$num_medications_zscore <- scale(df_numerical$num_medications)
+df_numerical$number_outpatient_zscore <- scale(df_numerical$number_outpatient)
+df_numerical$number_emergency_zscore <- scale(df_numerical$number_emergency)
+df_numerical$number_inpatient_zscore <- scale(df_numerical$number_inpatient)
+df_numerical$number_diagnoses_zscore <- scale(df_numerical$number_diagnoses)
+```
+
+**Plot demonstration of normalized variables**
+
+```{r, fig.height = 6, fig.width = 12, fig.align = "center"}
+ggplot(df_numerical, aes(x = num_procedures_zscore, y = num_medications_zscore)) + 
+  geom_point(colour = 'orange') + 
+  ggtitle('Number or Procedures vs Number of Medications (Standardized by Z-Score)') +
+  theme_classic()
+```
+
+**Applying Robust Scaler to all numerical variables using formula x^1^ = ((x - median(x)) / (Q3 - Q1))**
+
+**First let us create the function to normalize the data**
+
+```{r}
+robust_scaler <- function(x){
+  return ((x - median(x)) / (quantile(x, probs = 0.75) - quantile(x, probs = 0.25)))
+}
+```
+
+```{r}
+names(df_numerical)
+```
+
+**Applying Robust Scaler to all numerical variables**
+
+```{r}
+df_numerical$time_in_hospital_rscaler <- scale(df_numerical$time_in_hospital)
+df_numerical$num_lab_procedures_rscaler <- scale(df_numerical$num_lab_procedures)
+df_numerical$num_procedures_rscaler <- scale(df_numerical$num_procedures)
+df_numerical$num_medications_rscaler <- scale(df_numerical$num_medications)
+df_numerical$number_outpatient_rscaler <- scale(df_numerical$number_outpatient)
+df_numerical$number_emergency_rscaler <- scale(df_numerical$number_emergency)
+df_numerical$number_inpatient_rscaler <- scale(df_numerical$number_inpatient)
+df_numerical$number_diagnoses_rscaler <- scale(df_numerical$number_diagnoses)
+```
+
+**Plot demonstration of normalized variables**
+
+```{r, fig.height = 6, fig.width = 12, fig.align = "center"}
+ggplot(df_numerical, aes(num_procedures_rscaler)) + 
+  geom_boxplot(colour = 'orange') + 
+  ggtitle('Number or Procedures (Robust Scaler)') +
+  theme_classic()
+```
 
 ---
 
 #### d) Line, Scatter and Heatmaps can be used to show the correlation between the features of the dataset.
+
+**Preparing data**
+
+Method:
+
+1. Using the cor function returns a matrix of correlation between numerical variables.
+2. Melt the correlation matrix to be plotted as count 
+
+```{r, fig.height = 12, fig.width = 12, fig.align = "center"}
+num_df <- df_clean[, c('time_in_hospital', 'num_lab_procedures', 'num_procedures',  'num_medications', 'number_outpatient', 'number_emergency',  'number_inpatient', 'number_diagnoses')] 
+num_cor <- cor(num_df)
+
+num_cor_melted <- melt(num_cor)
+```
+
+**Plotting the correlation between numerical variables**
+
+```{r, fig.height = 12, fig.width = 12, fig.align = "center"}
+ggplot(num_cor_melted, aes(x = X1, y = X2, fill = value)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(
+    low = "blue",
+    high = "red",
+    mid = "white",
+    midpoint = 0,
+    limit = c(-1, 1),
+    space = "Lab",
+    name = "Pearson\nCorrelation"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(
+    angle = 45,
+    vjust = 1,
+    size = 12,
+    hjust = 1
+  )) +
+  coord_fixed() +
+  xlab('') + 
+  ylab('') + 
+  ggtitle('Correlation Between Numerical Variables')
+```
+
+As we can see on the graph, columns number_emergency and number_inpatient, number_inpatient and number_diagnoses, num_procedure and num_medications, time_in_hospital and num_medications, time_in_hospital and num_lab_procedures, time_in_hospital and number_diagnoses has noticable positive correlation albeit some of them are low, while columns num_lab_procedures and number_emergency, num_lab_procedures and number_inpatient has negative correlation.
