@@ -3,14 +3,15 @@ title: "Data Exploration and Preparation (CA Group)"
 output: html_notebook
 ---
 
-Students:\
+**Students:**\
 2021411 Jose Fernando Gonzalez Anavia\
 2022579 Mark Christian Bautista Albinto
 
-Lecturer:\
+**Lecturer:**\
 Dr. Muhammad Iqbal
 
-Dataset Source: https://archive.ics.uci.edu/ml/datasets/Diabetes+130-US+hospitals+for+years+1999-2008#
+**Task a - d:** Mark Christian Bautista Albinto\
+**Task e - h:** Jose Fernando Gonzalez Anavia
 
 #### Citations:
 
@@ -18,13 +19,13 @@ Beata Strack, Jonathan P. DeShazo, Chris Gennings, Juan L. Olmo, Sebastian Ventu
 
 ---
 
-Remove all environment variables for new project
+**Remove all environment variables for new project**
 
 ```{r}
 rm(list = ls())
 ```
 
-#### Import Libraries
+**Import Libraries**
 
 ```{r}
 library(dplyr)
@@ -34,6 +35,8 @@ library(reshape)
 
 
 #### Data Set Information:
+
+**Dataset Source:** https://archive.ics.uci.edu/ml/datasets/Diabetes+130-US+hospitals+for+years+1999-2008#
 
 The dataset represents 10 years (1999-2008) of clinical care at 130 US hospitals and integrated delivery networks. It includes over 50 features representing patient and hospital outcomes. Information was extracted from the database for encounters that satisfied the following criteria.
 
@@ -51,7 +54,7 @@ Detailed description of all the atrributes is provided in Table 1 Beata Strack, 
 
 https://www.hindawi.com/journals/bmri/2014/781670/
 
-#### Import Datasets
+**Import Datasets**
 
 ```{r}
 df <- read.csv('diabetic_data.csv')
