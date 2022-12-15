@@ -195,17 +195,21 @@ From 101,766 observations to 98,053 observations after omitting all rows with ? 
 
 Now that we omitted all the ? values we can take a sample of 10,000 values to proceed through the analysis using sample_n function from package dplyr
 
+But before doing that, we need to set the seed first for us to get the same sequence of samples
+
 ```{r}
+set.seed(5555)
 df_clean <- sample_n(df, 10000)
 nrow(df_clean)
 ```
 
-Plotting categorical variables (number of cases between male and female genders categorized by their race and age.)
+Plotting categorical variables (number of cases by race separated by gender and color categorized by age)
 
 ```{r, fig.height = 6, fig.width = 12, fig.align = "center"}
 ggplot(data = df_clean) +
   geom_bar(aes(x = race, fill = age)) +
-  facet_wrap(~gender)
+  facet_wrap(~gender) +
+  ggtitle('Number of Cases by Race between Male and Felame Patients')
 ```
 
 ---
@@ -213,7 +217,7 @@ ggplot(data = df_clean) +
 #### b) Calculate the statistical parameters (mean, median, minimum, maximum, and standard deviation) for each of the numerical variables
 
 ```{r, fig.width = 12, fig.align = "center"}
-df_numerical <- df_clean[, c('time_in_hospital', 'num_lab_procedures', 'num_procedures',  'num_medications', 'number_outpatient', 'number_emergency',  'number_inpatient')] 
+df_numerical <- df_clean[, c('time_in_hospital', 'num_lab_procedures', 'num_procedures',  'num_medications', 'number_outpatient', 'number_emergency',  'number_inpatient', 'number_diagnoses')] 
 
 for(i in 1:ncol(df_numerical)){
   print(names(df_numerical[i]))
@@ -224,8 +228,55 @@ for(i in 1:ncol(df_numerical)){
 } 
 
 df_numerical_melted <- melt(df_numerical)
-ggplot(df_numerical_melted, aes(factor(variable), value, color = factor(variable))) +
+ggplot(df_numerical_melted, aes(factor(variable), value, color = variable)) +
   geom_boxplot() + 
   labs(x = 'Variable', y = 'Values')
 ```
 
+---
+
+#### c) Apply Min-Max Normalization, Z-score Standardization and Robust scalar on the numerical data variables.
+
+Applying Min-Max Normalization using formula x* = (x - min(x) / (max(x) - min(x)))
+
+First let us create the function to normalize the data
+
+```{r}
+mm_norm <- function(x){
+  return ((x - min(x)) / (max(x) - min(x)))
+}
+```
+
+Next let us take a look at the initial values before normalization (we are going to use num_procedures and num_medications variables)
+
+```{r}
+ggplot(df_numerical, aes(x = num_procedures, y = num_medications)) + 
+  geom_point(colour = 'orange') + 
+  ggtitle('Number of Procedures vs Number of Medications')
+```
+
+The initial range of the plot is from 0 - 80
+
+Applying min-max normalization to all numerical variables
+
+Since we already created a subset for the numerical variables (df_numerical), we can use that subset to simplify the normalization
+
+```{r}
+df_numerical_norm <- mm_norm(df_numerical)
+```
+
+Plot demonstration of normalized variables
+
+```{r}
+ggplot(df_numerical_norm, aes(x = num_procedures, y = num_medications)) + 
+  geom_point(colour = 'orange') + 
+  ggtitle('Number or Procedures vs Number of Medications (Normalized by Min-Max)')
+```
+
+Min-Max Normalization Successful
+
+As we can see from the plot, there is only a low positive correlation between the variables. Meaning, as the number of procedures rise, the number of medications rise as well but only by a small margin.
+
+---
+
+#### d) Line, Scatter and Heatmaps can be used to show the correlation between the features of the dataset.
