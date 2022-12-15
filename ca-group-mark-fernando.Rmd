@@ -4,8 +4,11 @@ output: html_notebook
 ---
 
 Students:\
-Fernando\
-Mark
+2021411 Jose Fernando Gonzalez Anavia\
+2022579 Mark Christian Bautista Albinto
+
+Lecturer:\
+Dr. Muhammad Iqbal
 
 Dataset Source: https://archive.ics.uci.edu/ml/datasets/Diabetes+130-US+hospitals+for+years+1999-2008#
 
@@ -181,7 +184,7 @@ head(df)
 
 Next we are going to remove rows with ? values
 
-method: use for loop to loop through all the columns and filter the rows that is not ?
+method: use for loop to loop through all the columns and filter the rows that does not contain ?
 
 ```{r}
 for(i in 1:ncol(df)) {
@@ -193,7 +196,7 @@ nrow(df)
 
 From 101,766 observations to 98,053 observations after omitting all rows with ? values
 
-Now that we omitted all the ? values we can take a sample of 10,000 values to proceed through the analysis using sample_n function from package dplyr
+Now that we omitted all the rown with ? values we can take a sample of 10,000 values to proceed through the analysis using sample_n function from package dplyr
 
 But before doing that, we need to set the seed first for us to get the same sequence of samples
 
@@ -226,12 +229,19 @@ for(i in 1:ncol(df_numerical)){
   print(sd(df_numerical[, i]))
   print('-------------------------------------')
 } 
+```
 
+Plotting statistical parameters using boxplot
+
+Creating multiple boxplots using different variables can be quite difficult and messy with the code so we will first melt the data to get only 2 columns using their column as a name and their row as a value.
+
+```{r}
 df_numerical_melted <- melt(df_numerical)
 ggplot(df_numerical_melted, aes(factor(variable), value, color = variable)) +
   geom_boxplot() + 
   labs(x = 'Variable', y = 'Values')
 ```
+
 
 ---
 
