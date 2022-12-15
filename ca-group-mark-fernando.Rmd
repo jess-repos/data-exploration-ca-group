@@ -100,12 +100,12 @@ num_only_temp <- as.numeric(id$admission_type_id)
 max(na.omit(num_only_temp))
 ```
 
-Transform dataframe to use only one id variable
+**Extract data to each of their corresponding dataframe**
 
 method:
 
 1. create an new dataframes (id_{type}) to push data to as we clean up the id dataframe
-2. Separate values to appropriate dataframe
+2. Separate values to corresponding dataframe
 
 ```{r}
 # create new dataframe for admission_type
@@ -182,7 +182,7 @@ df[ ,c('weight', 'medical_specialty', 'payer_code')] <- list(NULL)
 head(df)
 ```
 
-Next we are going to remove rows with ? values
+**Next we are going to remove rows with ? values**
 
 method: use for loop to loop through all the columns and filter the rows that does not contain ?
 
@@ -206,7 +206,7 @@ df_clean <- sample_n(df, 10000)
 nrow(df_clean)
 ```
 
-Plotting categorical variables (number of cases by race separated by gender and color categorized by age)
+**Plotting categorical variables (number of cases by race separated by gender and color categorized by age)**
 
 ```{r, fig.height = 6, fig.width = 12, fig.align = "center"}
 ggplot(data = df_clean) +
@@ -219,9 +219,15 @@ ggplot(data = df_clean) +
 
 #### b) Calculate the statistical parameters (mean, median, minimum, maximum, and standard deviation) for each of the numerical variables
 
+**Extract all numerical variables to a new dataframe**
+
 ```{r, fig.width = 12, fig.align = "center"}
 df_numerical <- df_clean[, c('time_in_hospital', 'num_lab_procedures', 'num_procedures',  'num_medications', 'number_outpatient', 'number_emergency',  'number_inpatient', 'number_diagnoses')] 
+```
 
+**Getting the statistical parameters of the numerical variables using functions summary and sd**
+
+```{r}
 for(i in 1:ncol(df_numerical)){
   print(names(df_numerical[i]))
   print(summary(df_numerical[, i]))
@@ -231,7 +237,8 @@ for(i in 1:ncol(df_numerical)){
 } 
 ```
 
-Plotting statistical parameters using boxplot
+
+**Plotting statistical parameters using boxplot**
 
 Creating multiple boxplots using different variables can be quite difficult and messy with the code so we will first melt the data to get only 2 columns using their column as a name and their row as a value.
 
@@ -249,7 +256,7 @@ ggplot(df_numerical_melted, aes(factor(variable), value, color = variable)) +
 
 Applying Min-Max Normalization using formula x* = (x - min(x) / (max(x) - min(x)))
 
-First let us create the function to normalize the data
+**First let us create the function to normalize the data**
 
 ```{r}
 mm_norm <- function(x){
@@ -257,7 +264,7 @@ mm_norm <- function(x){
 }
 ```
 
-Next let us take a look at the initial values before normalization (we are going to use num_procedures and num_medications variables)
+**Next let us take a look at the initial values before normalization (we are going to use num_procedures and num_medications variables)**
 
 ```{r}
 ggplot(df_numerical, aes(x = num_procedures, y = num_medications)) + 
@@ -267,18 +274,30 @@ ggplot(df_numerical, aes(x = num_procedures, y = num_medications)) +
 
 The initial range of the plot is from 0 - 80
 
-Applying min-max normalization to all numerical variables
-
 Since we already created a subset for the numerical variables (df_numerical), we can use that subset to simplify the normalization
 
 ```{r}
-df_numerical_norm <- mm_norm(df_numerical)
+names(df_numerical)
 ```
 
-Plot demonstration of normalized variables
+**Applying min-max normalization to all numerical variables**
 
 ```{r}
-ggplot(df_numerical_norm, aes(x = num_procedures, y = num_medications)) + 
+df_numerical$time_in_hospital_minmax <- mm_norm(df_numerical$time_in_hospital)
+df_numerical$num_lab_procedures_minmax <- mm_norm(df_numerical$num_lab_procedures)
+df_numerical$num_procedures_minmax <- mm_norm(df_numerical$num_procedures)
+df_numerical$num_medications_minmax <- mm_norm(df_numerical$num_medications)
+df_numerical$number_outpatient_minmax <- mm_norm(df_numerical$number_outpatient)
+df_numerical$number_emergency_minmax <- mm_norm(df_numerical$number_emergency)
+df_numerical$number_inpatient_minmax <- mm_norm(df_numerical$number_inpatient)
+df_numerical$number_diagnoses_minmax <- mm_norm(df_numerical$number_diagnoses)
+```
+
+
+**Plot demonstration of normalized variables**
+
+```{r}
+ggplot(df_numerical, aes(x = num_procedures_minmax, y = num_medications_minmax)) + 
   geom_point(colour = 'orange') + 
   ggtitle('Number or Procedures vs Number of Medications (Normalized by Min-Max)')
 ```
@@ -286,6 +305,8 @@ ggplot(df_numerical_norm, aes(x = num_procedures, y = num_medications)) +
 Min-Max Normalization Successful
 
 As we can see from the plot, there is only a low positive correlation between the variables. Meaning, as the number of procedures rise, the number of medications rise as well but only by a small margin.
+
+**Applying Z-Score Standardization to all numerical variables**
 
 ---
 
